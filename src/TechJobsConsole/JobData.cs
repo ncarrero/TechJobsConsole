@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Text;
 
 namespace TechJobsConsole
@@ -10,6 +10,7 @@ namespace TechJobsConsole
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
+        //returns a list of all jobs available
         public static List<Dictionary<string, string>> FindAll()
         {
             LoadData();
@@ -19,6 +20,7 @@ namespace TechJobsConsole
         /*
          * Returns a list of all values contained in a given column,
          * without duplicates. 
+         * ex: for skill, it will return non-coder, ruby, etc.
          */
         public static List<string> FindAll(string column)
         {
@@ -38,6 +40,9 @@ namespace TechJobsConsole
             return values;
         }
 
+
+        //will return each dictionary that contains a given value in a specific column
+        //ex: will return each dictionary that has the keyword ruby in the skills column
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
@@ -49,7 +54,9 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                //if (aValue.Contains(value))
+                //will search for term regardless of uppercase or lowercase
+                if (aValue.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0)
                 {
                     jobs.Add(row);
                 }
@@ -137,6 +144,31 @@ namespace TechJobsConsole
             valueBuilder.Clear();
 
             return rowValues.ToArray();
+        }
+
+        //will return a dictionary of a value found in any of the columns
+        //ex: will return a dictionary of the value data found in all columns, not just skill or name
+        public static List<Dictionary<string, string>> FindbyValue(string value)
+        {
+            //load data, if not already loaded
+            LoadData();
+            //set up a list of jobs to return for the method
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+            //row is a dictionary of <string, string>
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                //item is a key, value pair
+                foreach (KeyValuePair<string, string> field in row)
+                {
+                    string aValue = field.Value;
+                    //will search for values regardless of being uppercase or lowercase
+                    if (aValue.IndexOf(value, StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        jobs.Add(row);
+                    }
+                }
+            }
+            return jobs;
         }
     }
 }

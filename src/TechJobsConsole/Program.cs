@@ -5,6 +5,7 @@ namespace TechJobsConsole
 {
     class Program
     {
+        //**main class**
         static void Main(string[] args)
         {
             // Create two Dictionary vars to hold info for menu and data
@@ -25,6 +26,7 @@ namespace TechJobsConsole
             Console.WriteLine("Welcome to LaunchCode's TechJobs App!");
 
             // Allow user to search/list until they manually quit with ctrl+c
+            //while (true) allows loop forever
             while (true)
             {
 
@@ -63,13 +65,27 @@ namespace TechJobsConsole
                     // Fetch results
                     if (columnChoice.Equals("all"))
                     {
-                        Console.WriteLine("Search all fields not yet implemented.");
+                        PrintJobs(JobData.FindbyValue(searchTerm));
                     }
                     else
                     {
                         searchResults = JobData.FindByColumnAndValue(columnChoice, searchTerm);
                         PrintJobs(searchResults);
                     }
+
+                    /*
+                    {
+                        searchResults = JobData.FindByColumnAndValue(columnChoice, searchTerm);
+                        if (columnChoice.Contains(searchTerm));
+                        {
+                            PrintJobs(searchResults);
+                        }
+                        else
+                        {
+                            Console.WriteLine("No results were found.");
+                        }
+                    }
+                    */
                 }
             }
         }
@@ -116,9 +132,18 @@ namespace TechJobsConsole
             return choiceKeys[choiceIdx];
         }
 
+
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
-            Console.WriteLine("printJobs is not implemented yet");
+            foreach (Dictionary<string, string> item in someJobs)
+            {
+                Console.WriteLine("*****\n");
+                foreach (KeyValuePair<string, string> pair in item)
+                {
+                    Console.WriteLine(string.Format("{0}: {1}", pair.Key, pair.Value));
+                }
+                Console.WriteLine("\n*****\n");
+            }
         }
     }
 }
